@@ -48,10 +48,14 @@ function Update-SMPLDomainRecord
         $content,
         $ttl,
         $prio,
+        [Parameter(ValueFromPipeline = $true)]
         $domain,
+        [Parameter(ValueFromPipeline = $true)]
         $recordID,
         $emailAddress,
-        $domainApiToken
+        $domainApiToken,
+        [Switch]
+        $passThru
     )
 
     $url = "https://dnsimple.com/domains/$domain/records/$recordID"
@@ -81,7 +85,14 @@ function Update-SMPLDomainRecord
 
     $response = PutRequest -url $url -jsonData $jsonData -emailAddress $emailAddress -domainApiToken $domainApiToken
 
-    $response.record
+    if ($passThru)
+    {
+        return $response
+    }
+    else
+    {
+        $response.record
+    }
 }
 
 Export-ModuleMember -Function Update-SMPLDomainRecord
