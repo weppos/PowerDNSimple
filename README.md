@@ -3,7 +3,7 @@ PowerDNSimple
 
 PowerShell module for working with DNSimple API.
 
-Useage
+Usage
 ======
 
 #####Set Domain API Token
