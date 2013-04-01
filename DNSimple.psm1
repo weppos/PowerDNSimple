@@ -6,9 +6,28 @@
 
 #>
 
+#region Helper Functions
 function GetRequest
 {
+    param(
+        $url,
+        $emailAddress,
+        $domainApiToken
+    )
 
+    [System.Net.HttpWebRequest]$request = [System.Net.WebRequest]::Create($url)
+    $request.Accept = "application/json"
+    $request.Method = "GET"
+    $dnsimpleToken = $emailAddress + ":" + $domainApiToken
+    $request.Headers.add("X-DNSimple-Token", $dnsimpleToken)
+
+    $response = $request.GetResponse()
+    $stream = $response.GetResponseStream()
+    $reader = New-object System.IO.StreamReader($stream)
+    $json = ConvertFrom-Json ($reader.ReadToEnd())
+    $reader.Dispose()
+
+    return $json
 }
 
 function PutRequest
@@ -39,6 +58,33 @@ function PutRequest
     $reader.Dispose()
 
     return $json
+}
+#endregion
+
+#region Domain Records
+function Get-SMPLDomainRecords
+{
+    param(
+        [Parameter(ValueFromPipeline = $true)]
+        $domain,
+        $emailAddress,
+        $domainApiToken,
+        [Switch]
+        $PassThru
+    )
+
+    $url = "https://dnsimple.com/domains/$domain/records"
+
+    $response = GetRequest -url $url -emailAddress $emailAddress -domainApiToken $domainApiToken
+
+    if ($passThru)
+    {
+        return $response
+    }
+    else
+    {
+        $response.record
+    }
 }
 
 function Update-SMPLDomainRecord
@@ -94,5 +140,6 @@ function Update-SMPLDomainRecord
         $response.record
     }
 }
+#endregion
 
-Export-ModuleMember -Function Update-SMPLDomainRecord
+Export-ModuleMember -Function Update-SMPLDomainRecord, Get-SMPLDomainRecords
