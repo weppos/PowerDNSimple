@@ -1,4 +1,4 @@
-﻿<#
+<#
     
     Author: Ian Philpot (http://adminian.com)
     File: DNSimple.psm1
@@ -127,7 +127,7 @@ function Get-SMPLDomains
         $PassThru
     )
 
-    $url = "https://dnsimple.com/domains"
+    $url = "https://api.dnsimple.com/v1/domains"
 
     $response = GetRequest -url $url -emailAddress $emailAddress -domainApiToken $domainApiToken
 
@@ -156,7 +156,7 @@ function Get-SMPLDomainRecords
         $PassThru
     )
 
-    $url = "https://dnsimple.com/domains/$domain/records"
+    $url = "https://api.dnsimple.com/v1/domains/$domain/records"
 
     $response = GetRequest -url $url -emailAddress $emailAddress -domainApiToken $domainApiToken
 
@@ -191,7 +191,7 @@ function Add-SMPLDomainRecord
         $passThru
     )
 
-    $url = "https://dnsimple.com/domains/$domain/records"
+    $url = "https://api.dnsimple.com/v1/domains/$domain/records"
     $items = @{"record"=@{}}
 
     if ($name)
@@ -254,7 +254,7 @@ function Update-SMPLDomainRecord
         $passThru
     )
 
-    $url = "https://dnsimple.com/domains/$domain/records/$recordID"
+    $url = "https://api.dnsimple.com/v1/domains/$domain/records/$recordID"
     $items = @{"record"=@{}}
 
     if ($name)
@@ -307,7 +307,7 @@ function Remove-SMPLDomainRecord
     )
 
     $a = Read-Host "Are you sure you want to delete this record? (Y/N)"
-    $url = "https://dnsimple.com/domains/$domain/records/$recordID"
+    $url = "https://api.dnsimple.com/v1/domains/$domain/records/$recordID"
 
     if ($a -eq "Y")
     {
